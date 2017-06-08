@@ -7,7 +7,7 @@ Authors: Joel Burton, Christian Fernandez, Meggie Mahnken, Katie Byers.
 """
 
 
-from flask import Flask, render_template, redirect, flash
+from flask import Flask, render_template, redirect, flash, session
 import jinja2
 
 import melons
@@ -78,6 +78,8 @@ def show_shopping_cart():
     # Make sure your function can also handle the case wherein no cart has
     # been added to the session
 
+
+
     return render_template("cart.html")
 
 
@@ -100,7 +102,35 @@ def add_to_cart(melon_id):
     # - flash a success message
     # - redirect the user to the cart page
 
-    return "Oops! This needs to be implemented!"
+
+    # session['cart'] = {}
+    # # cart key = melon_id ; cart value = qty of that melon in cart.
+
+    
+    session["cart"] = session.get("cart", {})
+
+
+    if melon_id in session["cart"]:
+        session["cart"][melon_id] += 1
+        flash("Your melon has added into the cart.")
+
+    else:
+        session["cart"][melon_id] = 1
+        flash("Your melon has added into the cart.")
+
+    total_price = melons.get_by_id(melon_id).price * session["cart"][melon_id]
+    print session
+    return render_template("cart.html", 
+                           melon_name=session["cart"],
+                           quantity=session["cart"][melon_id][quantity],
+                           price=
+                           total_per_melon_id=
+                           total_cart=)
+
+    # edit cart dictionary to have another dictionary with all
+    # info from that melon (quantity, price)
+    # use that indormation to calculate total and final total
+    # pass all information to the cart template to display on website.
 
 
 @app.route("/login", methods=["GET"])
